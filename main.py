@@ -15,12 +15,12 @@ loan_term = col2.number_input("Loan Term (years)", min_value=1, value=30)
 
 # Calculate loan amount
 loan_amount = home_value - deposit
-monhly_interest_rate = (interest_rate / 100) / 12
+monthly_interest_rate = (interest_rate / 100) / 12
 number_of_payments = loan_term * 12
 monthly_payment = (
     loan_amount
-    * (monhly_interest_rate * (1 + monhly_interest_rate) ** number_of_payments)
-    / ((1 + monhly_interest_rate) ** number_of_payments - 1)
+    * (monthly_interest_rate * (1 + monthly_interest_rate) ** number_of_payments)
+    / ((1 + monthly_interest_rate) ** number_of_payments - 1)
 )
 
 # Display for repayment details
@@ -29,18 +29,18 @@ total_interest = total_payment - loan_amount
 
 st.write("## Repayment Details:")
 col1, col2, col3 = st.columns(3)
-col1.metric("Monthly Payment ($)", f"{monthly_payment:,.2f}")
-col2.metric("Total Payment ($)", f"{total_payment:,.2f}")
-col3.metric("Total Interest ($)", f"{total_interest:,.2f}")
+col1.metric("Monthly Payment ($)", f"${monthly_payment:,.2f}")
+col2.metric("Total Payment ($)", f"${total_payment:,.2f}")
+col3.metric("Total Interest ($)", f"${total_interest:,.2f}")
 
 # Amortization schedule
 schedule = []
-returned_loan_amount = loan_amount
+remaining_balance = loan_amount
 
 for i in range(1, number_of_payments + 1):
-    interest_payment = returned_loan_amount * monhly_interest_rate
+    interest_payment = remaining_balance * monthly_interest_rate
     principal_payment = monthly_payment - interest_payment
-    returned_loan_amount -= principal_payment
+    remaining_balance -= principal_payment
     year = math.ceil(i / 12)
     schedule.append(
         [
@@ -48,7 +48,7 @@ for i in range(1, number_of_payments + 1):
             monthly_payment,
             principal_payment,
             interest_payment,
-            returned_loan_amount,
+            remaining_balance,
             year,
         ]
     )
